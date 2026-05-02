@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.core.mail import send_mail
 
 
+
 # Home Page
 def home(request):
     products = Product.objects.all()
@@ -156,14 +157,20 @@ def update_product(request, id):
 
 
 
+
 @login_required
 def buy_now(request, id):
     product = Product.objects.get(id=id)
 
     if request.method == "POST":
         address = request.POST.get('address')
-        email = request.POST.get('email')   # 👈 get email from form
+        email = request.POST.get('email')
         phone = request.POST.get('phone')
+
+        # ✅ Basic validation
+        if not email:
+            messages.error(request, "Email is required")
+            return redirect(request.path)
 
         # Save order
         Order.objects.create(
@@ -174,19 +181,22 @@ def buy_now(request, id):
             phone=phone
         )
 
-        # Debug (check terminal)
         print("EMAIL ENTERED:", email)
 
-        # Send email
-        send_mail(
-            subject='Order Confirmation',
-            message=f'Your order for {product.name} is arive within 5 days 🗓️',
-            from_email='sujith11200411@gmail.com',
-            recipient_list=[email],   # 👈 FIXED HERE
-            fail_silently=False,
-        )
+        # ✅ Safe email sending
+        try:
+            send_mail(
+                subject='Order Confirmation',
+                message=f'Your order for {product.name} will arrive within 5 days 🗓️',
+                from_email='sujith11200411@gmail.com',
+                recipient_list=[email],
+                fail_silently=False,   # 🔥 show error in logs
+            )
+            print("Email sent successfully")
 
-        
+        except Exception as e:
+            print("EMAIL ERROR:", e)
+
         return redirect('home')
 
     return render(request, 'address.html', {'product': product})

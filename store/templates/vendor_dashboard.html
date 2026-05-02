@@ -105,7 +105,11 @@
 <!-- Navbar -->
 <div class="navbar">
     <h2>Vendor Panel</h2>
-    <a href="/logout/">Logout</a>
+
+    <div>
+        <a href="{% url 'home' %}" style="margin-right:20px;">Home</a>
+        <a href="/logout/">Logout</a>
+    </div>
 </div>
 
 <div class="container">
