@@ -137,3 +137,13 @@ EMAIL_USE_TLS = True
 
 EMAIL_HOST_USER = 'sujith11200411@gmail.com'
 EMAIL_HOST_PASSWORD = 'znrm cmsr ltbh rkvv'
+
+import os
+
+STATIC_URL = '/static/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
