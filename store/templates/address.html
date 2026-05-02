@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Delivery Details</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f1f3f6;
+        }
+
+        .box {
+            width: 400px;
+            margin: 60px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #fb641b;
+            color: white;
+            border: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+    <h2>Delivery Details</h2>
+
+    <p><b>{{ product.name }}</b> - ₹{{ product.price }}</p>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <textarea name="address" placeholder="Enter Address" required></textarea>
+
+        <input type="text" name="phone" placeholder="Phone Number" required>
+
+        <input type="email" name="email" placeholder="Email ID" required>
+
+        <button type="submit">Place Order</button>
+    </form>
+</div>
+
+</body>
+</html>

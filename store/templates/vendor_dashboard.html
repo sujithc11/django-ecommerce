@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vendor Dashboard</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial;
+            background: #f1f3f6;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: #000;
+            color: yellow;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+        }
+
+        /* Layout */
+        .container {
+            display: flex;
+            gap: 20px;
+            padding: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
+            flex: 1;
+        }
+
+        h3 {
+            margin-bottom: 15px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: orange;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: darkorange;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 10px;
+            background: #2874f0;
+            color: white;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        a.update {
+            color: blue;
+            text-decoration: none;
+        }
+
+        a.delete {
+            color: red;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Navbar -->
+<div class="navbar">
+    <h2>Vendor Panel</h2>
+    <a href="/logout/">Logout</a>
+</div>
+
+<div class="container">
+
+    <!-- LEFT: Add Product -->
+    <div class="card">
+        <h3>Add Product</h3>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="text" name="name" placeholder="Product Name" required>
+            <textarea name="description" placeholder="Description" required></textarea>
+            <input type="number" name="price" placeholder="Price" required>
+            <input type="file" name="image">
+
+            <button type="submit">Add Product</button>
+        </form>
+    </div>
+
+    <!-- CENTER: Product Table -->
+    <div class="card">
+        <h3>Your Products</h3>
+
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Update</th>
+                <th>Delete</th>
+            </tr>
+
+            {% for product in products %}
+            <tr>
+                <td>{{ product.name }}</td>
+                <td>₹{{ product.price }}</td>
+
+                <td>
+                    <a href="{% url 'update_product' product.id %}" class="update">
+                        Update
+                    </a>
+                </td>
+
+                <td>
+                    <a href="{% url 'delete_product' product.id %}" class="delete">
+                        Delete
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">No products</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <!-- RIGHT: Update Form -->
+    <div class="card">
+        <h3>Update Product</h3>
+
+        {% if edit_product %}
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <input type="text" name="name" value="{{ edit_product.name }}" required>
+            <textarea name="description">{{ edit_product.description }}</textarea>
+            <input type="number" name="price" value="{{ edit_product.price }}" required>
+            <input type="file" name="image">
+
+            <button type="submit">Update Product</button>
+        </form>
+        {% else %}
+            <p>Select a product to update</p>
+        {% endif %}
+    </div>
+
+</div>
+
+</body>
+</html>

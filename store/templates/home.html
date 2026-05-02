@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MyShop</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .navbar div {
+    display: flex;
+    align-items: center;
+    gap: 15px;  /* 👈 this creates space between Login & Cart */
+}
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f3f6;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: #2874f0;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* Grid */
+        .products {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            padding: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .products {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Flipkart Card */
+        .card {
+            background: white;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            transition: 0.2s;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .image-box {
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-box img {
+            max-height: 160px;
+            max-width: 100%;
+        }
+
+        .title {
+            font-size: 14px;
+            margin: 8px 0;
+            height: 40px;
+            overflow: hidden;
+        }
+
+        .rating {
+            background: green;
+            color: white;
+            padding: 2px 6px;
+            font-size: 12px;
+            display: inline-block;
+            border-radius: 3px;
+            margin-bottom: 5px;
+        }
+
+        .price {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .old-price {
+            text-decoration: line-through;
+            color: gray;
+            font-size: 13px;
+            margin-left: 5px;
+        }
+
+        .discount {
+            color: green;
+            font-size: 13px;
+            margin-left: 5px;
+        }
+
+        .buttons {
+            margin-top: 10px;
+            display: flex;
+            gap: 5px;
+        }
+
+        .btn {
+            flex: 1;
+            text-align: center;
+            padding: 8px;
+            font-size: 13px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .cart-btn {
+            background: #ff9f00;
+        }
+
+        .buy-btn {
+            background: #fb641b;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="navbar">
+    <h2>MyShop 🛒</h2>
+
+    <div>
+        {% if user.is_authenticated %}
+            <span style="margin-right:10px;">
+                Welcome, {{ user.username }}
+            </span>
+
+            <a href="{% url 'logout' %}">Logout</a>
+        {% else %}
+            <a href="{% url 'login' %}">Login</a>
+           
+        {% endif %}
+
+        <a href="{% url 'cart' %}">Cart 🛒</a>
+    </div>
+</div>
+
+<div class="products">
+    {% for product in products %}
+    <div class="card">
+
+        <div class="image-box">
+            {% if product.image %}
+                <img src="{{ product.image.url }}">
+            {% endif %}
+        </div>
+
+        <div class="title">{{ product.name }}</div>
+
+        
+
+        <div>
+            <span class="price">₹{{ product.price }}</span>
+            <span class="old-price">₹{{ product.price|add:200 }}</span>
+            <span class="discount">20% off</span>
+        </div>
+
+        <div class="buttons">
+            <a href="{% url 'add_to_cart' product.id %}" class="btn cart-btn">
+                Add to Cart
+            </a>
+
+  <a href="{% url 'buy_now' product.id %}" class="btn buy-btn">
+    Buy Now
+</a>
+        </div>
+
+    </div>
+    {% endfor %}
+</div>
+
+</body>
+</html>
