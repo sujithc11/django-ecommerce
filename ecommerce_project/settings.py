@@ -9,7 +9,7 @@ import cloudinary.api
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-secret-key')
 
 DEBUG = False
 
@@ -37,7 +37,7 @@ INSTALLED_APPS = [
 # MIDDLEWARE
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',   # for static files
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -66,14 +66,22 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ecommerce_project.wsgi.application'
 
-# DATABASE (Render PostgreSQL)
-DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL'),
-        conn_max_age=600,
-        ssl_require=True
-    )
-}
+# ✅ DATABASE (FIXED FOR BOTH LOCAL + RENDER)
+if os.environ.get('DATABASE_URL'):
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=os.environ.get('DATABASE_URL'),
+            conn_max_age=600,
+            ssl_require=True
+        )
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 # PASSWORD VALIDATION
 AUTH_PASSWORD_VALIDATORS = [
@@ -95,7 +103,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# MEDIA (handled by Cloudinary)
+# MEDIA (Cloudinary)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -103,7 +111,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 AUTH_USER_MODEL = 'store.CustomUser'
 LOGIN_URL = 'login'
 
-# EMAIL (secure)
+# EMAIL
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -119,6 +127,7 @@ cloudinary.config(
     api_secret=os.environ.get('CLOUDINARY_API_SECRET')
 )
 
-# USE CLOUDINARY FOR MEDIA FILES
+# STORAGE
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
 print("USING STORAGE:", DEFAULT_FILE_STORAGE)
