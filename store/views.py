@@ -190,7 +190,7 @@ def buy_now(request, id):
                 subject='Order Confirmation',
                 message=f'Your order for {product.name} will arrive within 5 days 🗓️',
                 from_email=settings.EMAIL_HOST_USER,
-                from_email = settings.EMAIL_HOST_USER or "sujith11200411@example.com"
+                from_email = settings.EMAIL_HOST_USER or "sujith11200411@example.com",
                 recipient_list=[email],
                 fail_silently=True,   # 🔥 show error in logs
             )
