@@ -201,3 +201,28 @@ def buy_now(request, id):
         return redirect('home')
 
     return render(request, 'address.html', {'product': product})
+
+
+
+
+
+
+
+
+from django.http import HttpResponse
+from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model
+
+def create_admin(request):
+    User = get_user_model()
+
+    if not User.objects.filter(username="admin").exists():
+        User.objects.create_superuser(
+            username="admin",
+            email="admin@gmail.com",
+            password="admin123"
+        )
+        return HttpResponse("Admin created")
+
+    return HttpResponse("Admin already exists")
+
