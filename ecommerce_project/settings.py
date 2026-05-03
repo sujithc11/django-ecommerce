@@ -121,3 +121,4 @@ cloudinary.config(
 
 # USE CLOUDINARY FOR MEDIA FILES
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+print("USING STORAGE:", DEFAULT_FILE_STORAGE)
