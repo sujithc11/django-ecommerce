@@ -206,23 +206,18 @@ def buy_now(request, id):
 
 
 
-
-
-
 from django.http import HttpResponse
-from django.contrib.auth import get_user_model
 from django.contrib.auth import get_user_model
 
 def create_admin(request):
     User = get_user_model()
 
-    if not User.objects.filter(username="admin").exists():
+    if not User.objects.filter(username="rajkumar").exists():
         User.objects.create_superuser(
-            username="admin",
-            email="admin@gmail.com",
-            password="admin123"
+            username="rajkumar",
+            email="rajkumar@gmail.com",
+            password="rajkumarbhc"
         )
-        return HttpResponse("Admin created")
+        return HttpResponse("Admin created successfully")
 
     return HttpResponse("Admin already exists")
-
